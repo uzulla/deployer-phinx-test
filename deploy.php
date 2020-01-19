@@ -1,0 +1,72 @@
+<?php
+
+namespace Deployer;
+
+require_once __DIR__ . "/vendor/autoload.php";
+
+require 'recipe/common.php';
+require 'recipe/phinx.php';
+
+inventory('hosts.yml');
+
+// Project name
+set('application', 'deployer-phinx-test');
+
+// Project repository
+set('repository', 'git@github.com:uzulla/deployer-phinx-test.git');
+
+// [Optional] Allocate tty for git clone. Default value is false.
+set('git_tty', true);
+
+// Shared files/dirs between deploys 
+set('shared_files', []);
+set('shared_dirs', []);
+
+// Writable dirs by web server 
+set('writable_dirs', []);
+set('allow_anonymous_stats', false);
+
+set('phinx', [
+    'environment' => 'production',
+    'configuration' => 'phinx.php',
+    'remove-all' => '' // とりあえずBreakpointはなしで…
+]);
+
+desc('Deploy your project');
+task('deploy', [
+    'deploy:info',
+    'deploy:prepare',
+    'deploy:lock',
+    'deploy:release',
+    'deploy:update_code',
+    'deploy:shared',
+    'deploy:writable',
+    'deploy:vendors',
+    'deploy:clear_paths',
+    'deploy:symlink',
+    'deploy:unlock',
+    'cleanup',
+    'success'
+]);
+
+task('test', function () {
+    writeln('Hello world');
+});
+
+// db migration
+after('cleanup', function(){
+    $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
+    invoke('phinx:migrate');
+});
+
+// upload config
+before('deploy:shared', 'upload-env');
+task('upload-env', function () {
+    $stage = get('stage');
+    upload(__DIR__ . "/{$stage}.env", ".env");
+    upload(__DIR__ . "/{$stage}.phinx.php", "phinx.php");
+});
+
+// // [Optional] If deploy fails automatically unlock.
+after('deploy:failed', 'deploy:unlock');

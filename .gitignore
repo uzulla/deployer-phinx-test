@@ -1,0 +1,4 @@
+*.hosts.yml
+*.phinx.php
+*.env
+*.sqlite3
