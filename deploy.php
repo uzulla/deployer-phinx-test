@@ -7,7 +7,7 @@ require_once __DIR__ . "/vendor/autoload.php";
 require 'recipe/common.php';
 require 'recipe/phinx.php';
 
-inventory('hosts.yml');
+inventory('production.hosts.yml');
 
 // Project name
 set('application', 'deployer-phinx-test');
@@ -29,6 +29,7 @@ set('allow_anonymous_stats', false);
 set('phinx', [
     'environment' => 'production',
     'configuration' => 'phinx.php',
+    'phinx_path' => 'vendor/bin/phinx',
     'remove-all' => '' // とりあえずBreakpointはなしで…
 ]);
 
@@ -54,11 +55,7 @@ task('test', function () {
 });
 
 // db migration
-after('cleanup', function(){
-    $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
-    $dotenv->load();
-    invoke('phinx:migrate');
-});
+after('cleanup', 'phinx:migrate');
 
 // upload config
 before('deploy:shared', 'upload-env');
