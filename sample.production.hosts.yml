@@ -1,0 +1,5 @@
+your_host.exmaple.jp:
+  stage: production
+  deploy_path: ~/phinx-deployer-test
+  user: your-ssh-name
+  roles: app
