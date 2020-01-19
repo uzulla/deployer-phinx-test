@@ -19,7 +19,7 @@ set('repository', 'git@github.com:uzulla/deployer-phinx-test.git');
 set('git_tty', true);
 
 // Shared files/dirs between deploys 
-set('shared_files', []);
+set('shared_files', ['database.sqlite3']);
 set('shared_dirs', []);
 
 // Writable dirs by web server 
