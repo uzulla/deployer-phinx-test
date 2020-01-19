@@ -29,9 +29,10 @@ set('allow_anonymous_stats', false);
 set('phinx', [
     'environment' => 'production',
     'configuration' => 'phinx.php',
-    'phinx_path' => 'vendor/bin/phinx',
     'remove-all' => '' // とりあえずBreakpointはなしで…
 ]);
+
+set('phinx_path', 'vendor/bin/phinx');
 
 desc('Deploy your project');
 task('deploy', [
