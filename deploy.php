@@ -62,8 +62,8 @@ after('cleanup', 'phinx:migrate');
 before('deploy:shared', 'upload-env');
 task('upload-env', function () {
     $stage = get('stage');
-    upload(__DIR__ . "/{$stage}.env", ".env");
-    upload(__DIR__ . "/{$stage}.phinx.php", "phinx.php");
+    upload(__DIR__ . "/{$stage}.env", "{{release_path}}/.env");
+    upload(__DIR__ . "/{$stage}.phinx.php", "{{release_path}}/phinx.php");
 });
 
 // // [Optional] If deploy fails automatically unlock.
